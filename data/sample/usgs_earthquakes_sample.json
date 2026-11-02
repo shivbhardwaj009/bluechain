@@ -1,0 +1,103 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "source": "USGS Earthquake Hazards Program",
+    "title": "USGS Offshore Subduction Quakes",
+    "filter": "marine only, magnitude >= 6.5, depth < 70 km"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "us7000kermadec2026",
+      "properties": {
+        "mag": 7.4,
+        "place": "120 km NE of L'Esperance Rock, Kermadec Islands",
+        "time": 1793582400000,
+        "updated": 1793589600000,
+        "tz": null,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000kermadec2026",
+        "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/us7000kermadec2026.geojson",
+        "felt": 14,
+        "cdi": 4.1,
+        "alert": "yellow",
+        "status": "reviewed",
+        "tsunami": 1,
+        "sig": 880,
+        "net": "us",
+        "code": "7000kermadec2026",
+        "sources": ",us,",
+        "types": ",moment-tensor,origin,phase-data,",
+        "nst": 78,
+        "dmin": 1.2,
+        "rms": 0.82,
+        "gap": 32,
+        "magType": "mww",
+        "type": "earthquake",
+        "title": "M 7.4 - Kermadec Islands Trench"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-177.85, -30.45, 22.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "us7000tonga2026",
+      "properties": {
+        "mag": 6.9,
+        "place": "95 km SW of Pangai, Tonga",
+        "time": 1793611200000,
+        "updated": 1793618400000,
+        "tz": null,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tonga2026",
+        "tsunami": 1,
+        "sig": 750,
+        "magType": "mww",
+        "type": "earthquake",
+        "title": "M 6.9 - Tonga Subduction Zone"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-175.05, -20.40, 18.5]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "us7000kuril2026",
+      "properties": {
+        "mag": 6.8,
+        "place": "180 km SSE of Kuril'sk, Russia",
+        "time": 1793640000000,
+        "updated": 1793647200000,
+        "tsunami": 1,
+        "sig": 710,
+        "magType": "mww",
+        "type": "earthquake",
+        "title": "M 6.8 - Kuril-Kamchatka Trench"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [149.20, 44.15, 34.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "us7000chile2026",
+      "properties": {
+        "mag": 7.1,
+        "place": "140 km WNW of Constitucion, Chile",
+        "time": 1793668800000,
+        "updated": 1793676000000,
+        "tsunami": 1,
+        "sig": 790,
+        "magType": "mww",
+        "type": "earthquake",
+        "title": "M 7.1 - Peru-Chile Trench Offshore"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.85, -34.80, 26.0]
+      }
+    }
+  ]
+}

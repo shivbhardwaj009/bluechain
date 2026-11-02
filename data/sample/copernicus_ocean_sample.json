@@ -1,0 +1,76 @@
+{
+  "source": "Copernicus Marine Service (GLOBAL_ANALYSISFORECAST_PHY_BGC)",
+  "timestamp": "2026-11-02T00:00:00Z",
+  "points": [
+    {
+      "name": "Gulf of Oman / Arabian Sea Bloom Zone",
+      "lat": 24.5,
+      "lon": 58.5,
+      "chlorophyll_mg_m3": 14.8,
+      "chlorophyll_zscore": 3.8,
+      "sst_degc": 29.8,
+      "dissolved_oxygen_mg_l": 2.1,
+      "salinity_psu": 36.8,
+      "ph": 8.05,
+      "current_u_ms": 0.28,
+      "current_v_ms": -0.15,
+      "wind_speed_ms": 4.2
+    },
+    {
+      "name": "Baltic Marine Entrance (Kattingat)",
+      "lat": 56.5,
+      "lon": 11.5,
+      "chlorophyll_mg_m3": 8.4,
+      "chlorophyll_zscore": 2.9,
+      "sst_degc": 14.2,
+      "dissolved_oxygen_mg_l": 3.4,
+      "salinity_psu": 24.5,
+      "ph": 7.92,
+      "current_u_ms": -0.12,
+      "current_v_ms": 0.31,
+      "wind_speed_ms": 6.8
+    },
+    {
+      "name": "Great Barrier Reef Inshore",
+      "lat": -18.25,
+      "lon": 149.50,
+      "chlorophyll_mg_m3": 0.35,
+      "chlorophyll_zscore": 0.4,
+      "sst_degc": 31.2,
+      "dissolved_oxygen_mg_l": 6.2,
+      "salinity_psu": 35.4,
+      "ph": 7.98,
+      "current_u_ms": -0.22,
+      "current_v_ms": -0.18,
+      "wind_speed_ms": 2.5
+    },
+    {
+      "name": "California Current Upwelling / Hypoxia Zone",
+      "lat": 36.5,
+      "lon": -123.5,
+      "chlorophyll_mg_m3": 5.2,
+      "chlorophyll_zscore": 2.3,
+      "sst_degc": 13.8,
+      "dissolved_oxygen_mg_l": 2.8,
+      "salinity_psu": 33.7,
+      "ph": 7.84,
+      "current_u_ms": 0.10,
+      "current_v_ms": -0.45,
+      "wind_speed_ms": 8.5
+    },
+    {
+      "name": "Southern Ocean Polar Front",
+      "lat": -56.0,
+      "lon": -40.0,
+      "chlorophyll_mg_m3": 0.85,
+      "chlorophyll_zscore": 0.8,
+      "sst_degc": 3.2,
+      "dissolved_oxygen_mg_l": 8.1,
+      "salinity_psu": 34.1,
+      "ph": 8.08,
+      "current_u_ms": 0.42,
+      "current_v_ms": 0.05,
+      "wind_speed_ms": 12.0
+    }
+  ]
+}

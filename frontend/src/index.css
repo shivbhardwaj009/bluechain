@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Deep Ocean Theme Palette */
+  --bg-primary: #050b14;
+  --bg-secondary: #0a1626;
+  --bg-tertiary: #0f2238;
+  --bg-glass: rgba(10, 22, 38, 0.85);
+  --bg-glass-card: rgba(15, 34, 56, 0.75);
+
+  --border-subtle: rgba(56, 189, 248, 0.15);
+  --border-glow: rgba(56, 189, 248, 0.35);
+
+  --accent-cyan: #38bdf8;
+  --accent-teal: #14b8a6;
+  --accent-blue: #2563eb;
+  --accent-indigo: #6366f1;
+
+  /* Risk & Severity Colors */
+  --severity-low: #10b981;
+  --severity-moderate: #f59e0b;
+  --severity-severe: #f97316;
+  --severity-extreme: #ef4444;
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --shadow-deep: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  --shadow-cyan: 0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphic Panel Utility */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-deep);
+}
+
+.glass-card {
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-2px);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(5, 11, 20, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-glow);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
+}
+
+/* MapLibre Popup Customization */
+.maplibregl-popup-content {
+  background: var(--bg-secondary) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--accent-cyan) !important;
+  border-radius: 10px !important;
+  padding: 14px !important;
+  box-shadow: var(--shadow-cyan) !important;
+  font-family: var(--font-main) !important;
+  max-width: 320px !important;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: var(--bg-secondary) !important;
+}
+
+.maplibregl-popup-close-button {
+  color: var(--text-muted) !important;
+  padding: 4px 8px !important;
+  font-size: 16px !important;
+}
+.maplibregl-popup-close-button:hover {
+  color: var(--text-main) !important;
+}

@@ -1,0 +1,49 @@
+{
+  "model_version": "v1.0.0",
+  "model_type": "MultiHorizon_GradientBoosting_SST_Forecaster",
+  "trained_at": "2026-11-02T13:28:04.127670",
+  "horizons_days": [
+    7,
+    14,
+    30
+  ],
+  "feature_columns": [
+    "sin_doy",
+    "cos_doy",
+    "lat_norm",
+    "lon_norm",
+    "lag_1d",
+    "lag_2d",
+    "lag_3d",
+    "lag_5d",
+    "lag_7d",
+    "lag_14d",
+    "rolling_mean_7d",
+    "rolling_std_7d"
+  ],
+  "metrics_test": {
+    "7d": {
+      "mae": 0.4542,
+      "rmse": 0.5707,
+      "baseline_mae": 0.4673,
+      "baseline_rmse": 0.5782,
+      "skill_score_pct": 1.31
+    },
+    "14d": {
+      "mae": 0.4969,
+      "rmse": 0.6282,
+      "baseline_mae": 0.5666,
+      "baseline_rmse": 0.7109,
+      "skill_score_pct": 11.62
+    },
+    "30d": {
+      "mae": 0.533,
+      "rmse": 0.6844,
+      "baseline_mae": 0.693,
+      "baseline_rmse": 0.8563,
+      "skill_score_pct": 20.08
+    }
+  },
+  "scientific_framework": "Lagged Autoregressive + Seasonal Harmonics + Spatial Coordinate Normalization",
+  "baseline_comparison": "Persistence (y_t+h = y_t)"
+}

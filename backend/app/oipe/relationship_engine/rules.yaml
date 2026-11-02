@@ -1,0 +1,71 @@
+# Scientific Ocean Relationship Engine Rule Configuration
+version: "1.0.0"
+description: "Config-driven oceanographic risk evaluation rules based on thermodynamic and biogeochemical coupling"
+
+rules:
+  - id: mhw_coral_bleaching
+    name: "Thermal Stratification & Coral Bleaching Risk"
+    hazard_category: "marine_heatwave"
+    description: "Warming SST combined with low surface winds inhibits turbulent cooling, inducing severe thermal stratification, prolonged MHW conditions, and coral bleaching mortality."
+    conditions:
+      sst_min: 28.5
+      sst_anomaly_min: 1.2
+      wind_speed_max: 5.0
+    weight: 0.35
+    scoring:
+      sst_anomaly_factor: 0.30
+      low_wind_bonus: 0.20
+      base_risk: 0.40
+    explanation_template: "Severe thermal stratification detected (SST {sst:.1f}°C, anomaly +{sst_anomaly:.2f}°C) with quiescent winds ({wind_speed:.1f} m/s) suppressing convective ocean cooling. High coral bleaching & benthic heat stress."
+
+  - id: hab_eutrophication
+    name: "Phytoplankton Eutrophication & HAB Risk"
+    hazard_category: "harmful_algal_bloom"
+    description: "Elevated sea surface temperature coupled with high chlorophyll-a concentration and nutrient stratification fuels rapid harmful algal proliferation."
+    conditions:
+      sst_min: 18.0
+      chlorophyll_min: 4.0
+    weight: 0.25
+    scoring:
+      chlorophyll_factor: 0.05
+      sst_factor: 0.02
+      base_risk: 0.45
+    explanation_template: "Elevated chlorophyll-a ({chlorophyll:.2f} mg/m³) in warm waters ({sst:.1f}°C) triggers acute phytoplankton bloom and biological toxin release risk."
+
+  - id: ocean_deoxygenation
+    name: "Thermal Hypoxia & Deoxygenation Risk"
+    hazard_category: "deoxygenation"
+    description: "Warmer ocean waters reduce oxygen gas solubility while microbial respiration of decomposing biomass consumes dissolved oxygen, driving dead zone expansion."
+    conditions:
+      sst_min: 20.0
+      dissolved_oxygen_max: 3.5
+    weight: 0.20
+    scoring:
+      low_oxygen_factor: 0.15
+      base_risk: 0.50
+    explanation_template: "Severe oceanic deoxygenation risk: Dissolved O2 is critically depleted to {dissolved_oxygen:.2f} mg/L in {sst:.1f}°C water, creating hypoxic dead zone conditions lethal to fish and pelagic fauna."
+
+  - id: ocean_acidification
+    name: "Marine Calcification Acidification Stress"
+    hazard_category: "acidification"
+    description: "Depressed surface seawater pH lowers aragonite saturation, impeding calcification for pteropods, shellfish, and hermatypic corals."
+    conditions:
+      ph_max: 7.95
+    weight: 0.15
+    scoring:
+      ph_deficit_factor: 1.5
+      base_risk: 0.40
+    explanation_template: "Chemical acidification stress: Ocean pH dropped to {ph:.3f} (sub-8.0 threshold), reducing aragonite saturation horizon and corroding calcium carbonate shells."
+
+  - id: cyclone_rapid_intensification
+    name: "Tropical Cyclone Ocean Heat Content Intensification"
+    hazard_category: "cyclone_intensification"
+    description: "Tropical cyclone transiting over deep ocean heat content with SST > 26.5°C experiences enthalpy flux fueling rapid intensification into major Cat 4-5 status."
+    conditions:
+      sst_min: 27.5
+      is_cyclone_present: true
+    weight: 0.25
+    scoring:
+      sst_excess_factor: 0.15
+      base_risk: 0.60
+    explanation_template: "Tropical cyclone passing over warm ocean waters (SST {sst:.1f}°C > 26.5°C threshold). High sea-air enthalpy flux fuels rapid intensification and catastrophic storm surge."

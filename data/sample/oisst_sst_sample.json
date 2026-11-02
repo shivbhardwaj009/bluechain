@@ -1,0 +1,109 @@
+{
+  "source": "NOAA OISST v2.1",
+  "spatial_resolution": "0.25 deg",
+  "temporal_resolution": "daily",
+  "regions": [
+    {
+      "name": "Coral Sea / Great Barrier Reef",
+      "basin": "Pacific Ocean",
+      "lat": -18.25,
+      "lon": 149.50,
+      "climatology_90th_pct": 28.4,
+      "timeseries": [
+        {"time": "2026-10-25T00:00:00Z", "sst": 29.5, "anomaly": 1.4, "unit": "degC"},
+        {"time": "2026-10-26T00:00:00Z", "sst": 29.8, "anomaly": 1.7, "unit": "degC"},
+        {"time": "2026-10-27T00:00:00Z", "sst": 30.1, "anomaly": 2.0, "unit": "degC"},
+        {"time": "2026-10-28T00:00:00Z", "sst": 30.4, "anomaly": 2.3, "unit": "degC"},
+        {"time": "2026-10-29T00:00:00Z", "sst": 30.6, "anomaly": 2.5, "unit": "degC"},
+        {"time": "2026-10-30T00:00:00Z", "sst": 30.7, "anomaly": 2.6, "unit": "degC"},
+        {"time": "2026-10-31T00:00:00Z", "sst": 30.9, "anomaly": 2.8, "unit": "degC"},
+        {"time": "2026-11-01T00:00:00Z", "sst": 31.0, "anomaly": 2.9, "unit": "degC"},
+        {"time": "2026-11-02T00:00:00Z", "sst": 31.2, "anomaly": 3.1, "unit": "degC"}
+      ]
+    },
+    {
+      "name": "North Atlantic Subtropical Gyre",
+      "basin": "Atlantic Ocean",
+      "lat": 26.50,
+      "lon": -45.00,
+      "climatology_90th_pct": 25.1,
+      "timeseries": [
+        {"time": "2026-10-25T00:00:00Z", "sst": 26.2, "anomaly": 1.2, "unit": "degC"},
+        {"time": "2026-10-26T00:00:00Z", "sst": 26.4, "anomaly": 1.4, "unit": "degC"},
+        {"time": "2026-10-27T00:00:00Z", "sst": 26.6, "anomaly": 1.6, "unit": "degC"},
+        {"time": "2026-10-28T00:00:00Z", "sst": 26.9, "anomaly": 1.9, "unit": "degC"},
+        {"time": "2026-10-29T00:00:00Z", "sst": 27.2, "anomaly": 2.2, "unit": "degC"},
+        {"time": "2026-10-30T00:00:00Z", "sst": 27.4, "anomaly": 2.4, "unit": "degC"},
+        {"time": "2026-10-31T00:00:00Z", "sst": 27.6, "anomaly": 2.6, "unit": "degC"},
+        {"time": "2026-11-01T00:00:00Z", "sst": 27.8, "anomaly": 2.8, "unit": "degC"},
+        {"time": "2026-11-02T00:00:00Z", "sst": 28.0, "anomaly": 3.0, "unit": "degC"}
+      ]
+    },
+    {
+      "name": "Equatorial Indian Ocean",
+      "basin": "Indian Ocean",
+      "lat": 0.0,
+      "lon": 78.5,
+      "climatology_90th_pct": 29.2,
+      "timeseries": [
+        {"time": "2026-10-25T00:00:00Z", "sst": 29.8, "anomaly": 0.8, "unit": "degC"},
+        {"time": "2026-10-26T00:00:00Z", "sst": 30.1, "anomaly": 1.1, "unit": "degC"},
+        {"time": "2026-10-27T00:00:00Z", "sst": 30.3, "anomaly": 1.3, "unit": "degC"},
+        {"time": "2026-10-28T00:00:00Z", "sst": 30.5, "anomaly": 1.5, "unit": "degC"},
+        {"time": "2026-10-29T00:00:00Z", "sst": 30.8, "anomaly": 1.8, "unit": "degC"},
+        {"time": "2026-10-30T00:00:00Z", "sst": 31.0, "anomaly": 2.0, "unit": "degC"},
+        {"time": "2026-10-31T00:00:00Z", "sst": 31.1, "anomaly": 2.1, "unit": "degC"},
+        {"time": "2026-11-01T00:00:00Z", "sst": 31.3, "anomaly": 2.3, "unit": "degC"},
+        {"time": "2026-11-02T00:00:00Z", "sst": 31.4, "anomaly": 2.4, "unit": "degC"}
+      ]
+    },
+    {
+      "name": "Gulf of Guinea",
+      "basin": "Atlantic Ocean",
+      "lat": 2.0,
+      "lon": 3.0,
+      "climatology_90th_pct": 28.1,
+      "timeseries": [
+        {"time": "2026-10-27T00:00:00Z", "sst": 28.8, "anomaly": 0.9, "unit": "degC"},
+        {"time": "2026-10-28T00:00:00Z", "sst": 29.0, "anomaly": 1.1, "unit": "degC"},
+        {"time": "2026-10-29T00:00:00Z", "sst": 29.3, "anomaly": 1.4, "unit": "degC"},
+        {"time": "2026-10-30T00:00:00Z", "sst": 29.5, "anomaly": 1.6, "unit": "degC"},
+        {"time": "2026-10-31T00:00:00Z", "sst": 29.8, "anomaly": 1.9, "unit": "degC"},
+        {"time": "2026-11-01T00:00:00Z", "sst": 30.0, "anomaly": 2.1, "unit": "degC"},
+        {"time": "2026-11-02T00:00:00Z", "sst": 30.2, "anomaly": 2.3, "unit": "degC"}
+      ]
+    },
+    {
+      "name": "Barents Sea / Arctic",
+      "basin": "Arctic Ocean",
+      "lat": 74.0,
+      "lon": 36.0,
+      "climatology_90th_pct": 3.2,
+      "timeseries": [
+        {"time": "2026-10-28T00:00:00Z", "sst": 4.5, "anomaly": 1.8, "unit": "degC"},
+        {"time": "2026-10-29T00:00:00Z", "sst": 4.8, "anomaly": 2.1, "unit": "degC"},
+        {"time": "2026-10-30T00:00:00Z", "sst": 5.0, "anomaly": 2.3, "unit": "degC"},
+        {"time": "2026-10-31T00:00:00Z", "sst": 5.2, "anomaly": 2.5, "unit": "degC"},
+        {"time": "2026-11-01T00:00:00Z", "sst": 5.5, "anomaly": 2.8, "unit": "degC"},
+        {"time": "2026-11-02T00:00:00Z", "sst": 5.7, "anomaly": 3.0, "unit": "degC"}
+      ]
+    }
+  ],
+  "global_grid_sample": [
+    {"lat": -18.25, "lon": 149.50, "sst": 31.2, "anomaly": 3.1},
+    {"lat": -15.00, "lon": 152.00, "sst": 30.8, "anomaly": 2.7},
+    {"lat": 26.50, "lon": -45.00, "sst": 28.0, "anomaly": 3.0},
+    {"lat": 24.00, "lon": -48.00, "sst": 27.5, "anomaly": 2.3},
+    {"lat": 0.00, "lon": 78.50, "sst": 31.4, "anomaly": 2.4},
+    {"lat": 5.00, "lon": 82.00, "sst": 30.9, "anomaly": 1.9},
+    {"lat": 2.00, "lon": 3.00, "sst": 30.2, "anomaly": 2.3},
+    {"lat": 74.00, "lon": 36.00, "sst": 5.7, "anomaly": 3.0},
+    {"lat": -58.00, "lon": -60.00, "sst": 4.2, "anomaly": 1.5},
+    {"lat": -45.00, "lon": 160.00, "sst": 14.8, "anomaly": 1.8},
+    {"lat": 38.00, "lon": 15.00, "sst": 24.5, "anomaly": 2.6},
+    {"lat": 21.50, "lon": -157.80, "sst": 27.8, "anomaly": 1.3},
+    {"lat": -12.00, "lon": -85.00, "sst": 22.4, "anomaly": 2.8},
+    {"lat": 15.00, "lon": 130.00, "sst": 30.4, "anomaly": 1.6},
+    {"lat": -22.00, "lon": 40.00, "sst": 27.9, "anomaly": 1.9}
+  ]
+}

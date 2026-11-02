@@ -1,0 +1,34 @@
+{
+  "source": "NOAA IBTrACS v04r00",
+  "cyclones": [
+    {
+      "sid": "2026300S12120",
+      "name": "ILSA-26",
+      "basin": "South Indian / Timor Sea",
+      "status": "Tropical Cyclone Category 4",
+      "max_wind_kt": 125,
+      "min_pressure_mb": 932,
+      "track": [
+        {"time": "2026-10-28T06:00:00Z", "lat": -12.4, "lon": 120.2, "wind_kt": 55, "pressure_mb": 988, "stage": "Tropical Storm"},
+        {"time": "2026-10-29T06:00:00Z", "lat": -14.1, "lon": 119.5, "wind_kt": 80, "pressure_mb": 970, "stage": "Category 1"},
+        {"time": "2026-10-30T06:00:00Z", "lat": -15.8, "lon": 118.9, "wind_kt": 105, "pressure_mb": 952, "stage": "Category 3"},
+        {"time": "2026-10-31T06:00:00Z", "lat": -17.5, "lon": 118.5, "wind_kt": 125, "pressure_mb": 932, "stage": "Category 4 Major Cyclone"},
+        {"time": "2026-11-01T06:00:00Z", "lat": -19.2, "lon": 118.8, "wind_kt": 115, "pressure_mb": 940, "stage": "Category 4"}
+      ]
+    },
+    {
+      "sid": "2026305N15135",
+      "name": "MAWAR-II",
+      "basin": "Western North Pacific",
+      "status": "Super Typhoon Category 5",
+      "max_wind_kt": 140,
+      "min_pressure_mb": 918,
+      "track": [
+        {"time": "2026-10-29T12:00:00Z", "lat": 13.5, "lon": 138.2, "wind_kt": 75, "pressure_mb": 975, "stage": "Category 1"},
+        {"time": "2026-10-30T12:00:00Z", "lat": 15.2, "lon": 135.4, "wind_kt": 110, "pressure_mb": 945, "stage": "Category 3"},
+        {"time": "2026-10-31T12:00:00Z", "lat": 17.0, "lon": 132.8, "wind_kt": 135, "pressure_mb": 922, "stage": "Category 4"},
+        {"time": "2026-11-01T12:00:00Z", "lat": 18.8, "lon": 130.1, "wind_kt": 140, "pressure_mb": 918, "stage": "Category 5 Super Typhoon"}
+      ]
+    }
+  ]
+}
