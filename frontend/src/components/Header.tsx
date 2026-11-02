@@ -1,16 +1,18 @@
 import React from 'react';
-import { Waves, ShieldAlert, RefreshCw, Compass, Droplet } from 'lucide-react';
+import { Waves, RefreshCw, Compass, Droplet, ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   onOpenSpillModal: () => void;
   onRefreshData: () => void;
   isRefreshing: boolean;
+  totalEventsCount: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenSpillModal,
   onRefreshData,
-  isRefreshing
+  isRefreshing,
+  totalEventsCount
 }) => {
   return (
     <header className="glass-panel" style={{
@@ -22,62 +24,64 @@ export const Header: React.FC<HeaderProps> = ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '12px 20px',
+      padding: '10px 18px',
       borderRadius: '12px'
     }}>
       {/* Brand & Scope */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        <div style={{
-          width: 40,
-          height: 40,
-          borderRadius: 10,
-          background: 'linear-gradient(135deg, #0284c7, #06b6d4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 0 15px rgba(56, 189, 248, 0.4)'
-        }}>
-          <Waves size={24} color="#ffffff" />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <img
+          src="/logo.png"
+          alt="BLUECHAIN"
+          style={{
+            width: 42,
+            height: 42,
+            borderRadius: 10,
+            boxShadow: '0 0 15px rgba(56, 189, 248, 0.45)',
+            border: '1px solid rgba(56, 189, 248, 0.5)',
+            objectFit: 'cover'
+          }}
+        />
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h1 style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '0.05em', color: '#ffffff' }}>
+            <h1 style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '0.06em', color: '#ffffff' }}>
               BLUECHAIN
             </h1>
             <span style={{
               fontSize: '11px',
-              fontWeight: 600,
+              fontWeight: 700,
               padding: '2px 8px',
               borderRadius: '999px',
               background: 'rgba(56, 189, 248, 0.15)',
               color: 'var(--accent-cyan)',
-              border: '1px solid rgba(56, 189, 248, 0.3)'
+              border: '1px solid rgba(56, 189, 248, 0.35)'
             }}>
-              OIPE v1.0
+              OIPE v1.0 • ONLINE
             </span>
           </div>
-          <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
             AI-Powered Ocean Behaviour & Impact Prediction System • Strictly Marine
           </p>
         </div>
       </div>
 
-      {/* Middle Pill: Scope Protection */}
+      {/* Middle Pill: Scope Enforcement Banner */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
         padding: '6px 14px',
-        background: 'rgba(15, 34, 56, 0.8)',
+        background: 'rgba(15, 34, 56, 0.85)',
         borderRadius: '20px',
-        border: '1px solid rgba(56, 189, 248, 0.2)',
+        border: '1px solid rgba(56, 189, 248, 0.25)',
         fontSize: '12px',
         color: '#bae6fd'
       }}>
-        <Compass size={14} color="var(--accent-cyan)" />
-        <span>Pelagic & Polar Basins Active</span>
+        <ShieldCheck size={15} color="var(--accent-cyan)" />
+        <span>Marine Land-Mask Active</span>
         <span style={{ color: 'var(--text-dim)' }}>|</span>
-        <span style={{ color: '#94a3b8' }}>Sample Data Mode (Offline Enabled)</span>
+        <span style={{ color: '#38bdf8', fontWeight: 600 }}>{totalEventsCount} Active Events Detected</span>
+        <span style={{ color: 'var(--text-dim)' }}>|</span>
+        <span style={{ color: '#94a3b8' }}>Sample Data Mode</span>
       </div>
 
       {/* Action Controls */}
@@ -93,17 +97,17 @@ export const Header: React.FC<HeaderProps> = ({
             border: 'none',
             borderRadius: '8px',
             padding: '8px 14px',
-            fontSize: '13px',
-            fontWeight: 600,
+            fontSize: '12px',
+            fontWeight: 700,
             cursor: 'pointer',
-            boxShadow: '0 0 12px rgba(245, 158, 11, 0.35)',
+            boxShadow: '0 0 12px rgba(245, 158, 11, 0.4)',
             transition: 'transform 0.15s ease'
           }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
           onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1.0)')}
         >
-          <Droplet size={16} />
-          <span>Simulate Oil Spill</span>
+          <Droplet size={15} />
+          <span>72h Oil Spill Tool</span>
         </button>
 
         <button
@@ -118,12 +122,12 @@ export const Header: React.FC<HeaderProps> = ({
             border: '1px solid rgba(56, 189, 248, 0.3)',
             borderRadius: '8px',
             padding: '8px 12px',
-            fontSize: '13px',
-            fontWeight: 500,
+            fontSize: '12px',
+            fontWeight: 600,
             cursor: isRefreshing ? 'wait' : 'pointer'
           }}
         >
-          <RefreshCw size={14} className={isRefreshing ? 'animate-spin' : ''} />
+          <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
           <span>{isRefreshing ? 'Syncing...' : 'Sync Feeds'}</span>
         </button>
       </div>

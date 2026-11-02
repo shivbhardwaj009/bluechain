@@ -16,24 +16,34 @@ import type {
   EcosystemSummaryResponse,
   SeaIceResponse,
   ForecastResponse,
-  SpillSimResponse
+  SpillSimResponse,
+  TimeSeriesResponse
 } from './api/client';
+import { Clock, Play, Pause, AlertOctagon } from 'lucide-react';
 
 export function App() {
   const [events, setEvents] = useState<OceanEventFeature[]>([]);
   const [riskData, setRiskData] = useState<RiskResponse | null>(null);
   const [ecosystemSummary, setEcosystemSummary] = useState<EcosystemSummaryResponse | null>(null);
   const [seaIceData, setSeaIceData] = useState<SeaIceResponse | null>(null);
+  const [currentIceBasin, setCurrentIceBasin] = useState<'arctic' | 'antarctic'>('arctic');
   const [forecastData, setForecastData] = useState<ForecastResponse | null>(null);
   const [spillResult, setSpillResult] = useState<SpillSimResponse | null>(null);
+  const [inspectedTelemetry, setInspectedTelemetry] = useState<TimeSeriesResponse | null>(null);
 
   const [activeLayer, setActiveLayer] = useState<OceanLayer>('risk_grid');
   const [timeStepIndex, setTimeStepIndex] = useState<number>(3); // Default 'Now'
   const [selectedEvent, setSelectedEvent] = useState<OceanEventFeature | null>(null);
   const [isSpillModalOpen, setIsSpillModalOpen] = useState(false);
   const [showSpillLayer, setShowSpillLayer] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isMapPickMode, setIsMapPickMode] = useState(false);
+  const [pickedSpillLat, setPickedSpillLat] = useState<number>(24.5);
+  const [pickedSpillLon, setPickedSpillLon] = useState<number>(-45.0);
+  const [spillPlaybackHour, setSpillPlaybackHour] = useState<number>(72);
+  const [isSpillPlaying, setIsSpillPlaying] = useState<boolean>(false);
+  const [landRejectionNotice, setLandRejectionNotice] = useState<string | null>(null);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [eventFilters, setEventFilters] = useState({
     heatwaves: true,
     earthquakes: true,
@@ -43,7 +53,7 @@ export function App() {
 
   const mapRef = useRef<maplibregl.Map | null>(null);
 
-  // Load initial ocean datasets
+  // Load Initial Datasets
   const loadData = async () => {
     try {
       setIsRefreshing(true);
@@ -51,7 +61,7 @@ export function App() {
         api.getEvents(),
         api.getRiskGrid(),
         api.getEcosystemSummary(),
-        api.getSeaIce('arctic'),
+        api.getSeaIce(currentIceBasin),
         api.getForecast(7)
       ]);
 
@@ -70,6 +80,62 @@ export function App() {
   useEffect(() => {
     loadData();
   }, []);
+
+  // Update Sea-Ice data when basin switched
+  const handleSwitchIceBasin = async (basin: 'arctic' | 'antarctic') => {
+    setCurrentIceBasin(basin);
+    try {
+      const data = await api.getSeaIce(basin);
+      setSeaIceData(data);
+      if (basin === 'arctic') {
+        handleFlyTo(82.0, 0.0, 3.2);
+      } else {
+        handleFlyTo(-75.0, 0.0, 3.2);
+      }
+    } catch (err) {
+      console.error('Error loading sea ice basin:', err);
+    }
+  };
+
+  // Automated particle animation loop when spill play is clicked
+  useEffect(() => {
+    let interval: any = null;
+    if (isSpillPlaying && spillResult) {
+      interval = setInterval(() => {
+        setSpillPlaybackHour((prev) => {
+          if (prev >= spillResult.duration_hours) {
+            setIsSpillPlaying(false);
+            return spillResult.duration_hours;
+          }
+          return prev + 6;
+        });
+      }, 700);
+    }
+    return () => clearInterval(interval);
+  }, [isSpillPlaying, spillResult]);
+
+  // Click on map handler
+  const handleMapClick = async (lat: number, lon: number) => {
+    if (isMapPickMode) {
+      setPickedSpillLat(lat);
+      setPickedSpillLon(lon);
+      setIsMapPickMode(false);
+      setIsSpillModalOpen(true);
+      return;
+    }
+
+    // Query clicked ocean coordinates
+    try {
+      setLandRejectionNotice(null);
+      const tsData = await api.getTimeSeries('sst', lat, lon);
+      setInspectedTelemetry(tsData);
+    } catch (err: any) {
+      if (err.message && err.message.includes('continental land')) {
+        setLandRejectionNotice(`Point (${lat.toFixed(2)}°, ${lon.toFixed(2)}°) is located on land. BLUECHAIN strictly monitors marine basins.`);
+        setTimeout(() => setLandRejectionNotice(null), 5000);
+      }
+    }
+  };
 
   // Filter events based on active drawer checkboxes
   const filteredEvents = events.filter((ev) => {
@@ -105,8 +171,11 @@ export function App() {
   const handleSimulationSuccess = (sim: SpillSimResponse) => {
     setSpillResult(sim);
     setShowSpillLayer(true);
+    setSpillPlaybackHour(sim.duration_hours);
     handleFlyTo(sim.origin_lat, sim.origin_lon, 5.0);
   };
+
+  const isForecastStep = TIME_STEPS[timeStepIndex].isForecast;
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
@@ -115,16 +184,45 @@ export function App() {
         onOpenSpillModal={() => setIsSpillModalOpen(true)}
         onRefreshData={loadData}
         isRefreshing={isRefreshing}
+        totalEventsCount={filteredEvents.length}
       />
+
+      {/* Terrestrial Scope Rejection Toast */}
+      {landRejectionNotice && (
+        <div style={{
+          position: 'absolute',
+          top: 80,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 35,
+          background: 'rgba(239, 68, 68, 0.95)',
+          color: '#ffffff',
+          borderRadius: 8,
+          padding: '8px 16px',
+          fontSize: '12px',
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 0 20px rgba(239, 68, 68, 0.6)'
+        }}>
+          <AlertOctagon size={16} />
+          <span>{landRejectionNotice}</span>
+        </div>
+      )}
 
       {/* Full-Screen MapLibre Map */}
       <OceanMap
         events={filteredEvents}
         riskData={riskData}
+        forecastData={forecastData}
         activeLayer={activeLayer}
         spillResult={spillResult}
         showSpillLayer={showSpillLayer}
+        spillPlaybackHour={spillPlaybackHour}
+        isForecastTimeStep={isForecastStep}
         onSelectEvent={handleSelectEvent}
+        onMapClickCoordinate={handleMapClick}
         mapRefExternal={mapRef}
       />
 
@@ -151,16 +249,77 @@ export function App() {
         onChangeIndex={(idx) => setTimeStepIndex(idx)}
       />
 
+      {/* Oil Spill Hour-by-Hour Trajectory Playback Widget */}
+      {spillResult && showSpillLayer && (
+        <div className="glass-panel" style={{
+          position: 'absolute',
+          bottom: 110,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 20,
+          padding: '10px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          border: '1px solid #f59e0b',
+          borderRadius: '10px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Clock size={16} color="#f59e0b" />
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#fef3c7' }}>
+              Spill Drift Step: Hour {spillPlaybackHour} / {spillResult.duration_hours}
+            </span>
+          </div>
+
+          <button
+            onClick={() => setIsSpillPlaying(!isSpillPlaying)}
+            style={{
+              padding: '4px 10px',
+              borderRadius: 6,
+              background: '#f59e0b',
+              border: 'none',
+              color: '#ffffff',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            {isSpillPlaying ? <Pause size={12} /> : <Play size={12} />}
+            <span>{isSpillPlaying ? 'Pause' : 'Play 72h Drift'}</span>
+          </button>
+
+          <input
+            type="range"
+            min="0"
+            max={spillResult.duration_hours}
+            step="6"
+            value={spillPlaybackHour}
+            onChange={(e) => setSpillPlaybackHour(parseInt(e.target.value))}
+            style={{ width: 140, accentColor: '#f59e0b' }}
+          />
+
+          <span style={{ fontSize: '11px', color: '#fde68a' }}>
+            Affected Slick: {spillResult.area_km2.toFixed(1)} km²
+          </span>
+        </div>
+      )}
+
       {/* Right Bottom: Dynamic Legend */}
       <Legend activeLayer={activeLayer} />
 
-      {/* Right Sidebar: Intelligence Dashboard (Recharts + Top Regions) */}
+      {/* Right Sidebar: Intelligence Dashboard */}
       <SideDashboard
         ecosystemSummary={ecosystemSummary}
         seaIceData={seaIceData}
         forecastData={forecastData}
+        inspectedCoordinateData={inspectedTelemetry}
         selectedRegionName={selectedEvent?.properties.title}
         onFlyToRegion={handleFlyTo}
+        onSwitchIceBasin={handleSwitchIceBasin}
+        currentIceBasin={currentIceBasin}
       />
 
       {/* Modal: 72h Lagrangian Oil Spill Drift Simulator */}
@@ -168,6 +327,12 @@ export function App() {
         isOpen={isSpillModalOpen}
         onClose={() => setIsSpillModalOpen(false)}
         onSimulationSuccess={handleSimulationSuccess}
+        onEnableMapPickMode={() => {
+          setIsSpillModalOpen(false);
+          setIsMapPickMode(true);
+        }}
+        pickedLat={pickedSpillLat}
+        pickedLon={pickedSpillLon}
       />
     </div>
   );

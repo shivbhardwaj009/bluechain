@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import {
-  AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend as RechartLegend
+  AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import {
-  TrendingUp, AlertOctagon, Activity, ChevronRight, ChevronLeft, ShieldAlert, Thermometer, Droplets
+  TrendingUp, ChevronRight, ChevronLeft, ShieldAlert, Thermometer, Droplets, MapPin, Compass
 } from 'lucide-react';
-import type { EcosystemSummaryResponse, SeaIceResponse, ForecastResponse } from '../api/client';
+import type { EcosystemSummaryResponse, SeaIceResponse, ForecastResponse, TimeSeriesResponse } from '../api/client';
 
 interface SideDashboardProps {
   ecosystemSummary: EcosystemSummaryResponse | null;
   seaIceData: SeaIceResponse | null;
   forecastData: ForecastResponse | null;
+  inspectedCoordinateData: TimeSeriesResponse | null;
   selectedRegionName?: string;
   onFlyToRegion: (lat: number, lon: number) => void;
+  onSwitchIceBasin: (basin: 'arctic' | 'antarctic') => void;
+  currentIceBasin: 'arctic' | 'antarctic';
 }
 
 export const SideDashboard: React.FC<SideDashboardProps> = ({
   ecosystemSummary,
   seaIceData,
   forecastData,
+  inspectedCoordinateData,
   selectedRegionName,
-  onFlyToRegion
+  onFlyToRegion,
+  onSwitchIceBasin,
+  currentIceBasin
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState<'forecast' | 'ice' | 'stress'>('forecast');
+  const [activeTab, setActiveTab] = useState<'forecast' | 'ice' | 'stress' | 'telemetry'>('forecast');
 
   // Chart data: forecast vs baseline with uncertainty band
   const forecastChartData = [
@@ -57,7 +63,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
       top: 92,
       right: 16,
       bottom: 24,
-      width: isCollapsed ? 44 : 380,
+      width: isCollapsed ? 44 : 390,
       zIndex: 15,
       transition: 'width 0.25s ease',
       display: 'flex'
@@ -91,30 +97,30 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
           padding: '16px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '16px'
+          gap: '14px'
         }}>
           {/* Header & Tabs */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <TrendingUp size={18} color="var(--accent-cyan)" />
-                <span style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: '13px', fontWeight: 800, letterSpacing: '0.04em' }}>
                   OCEAN PREDICTION INTEL
                 </span>
               </div>
-              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
-                {selectedRegionName || 'Coral Sea / GBR'}
+              <span style={{ fontSize: '10px', color: '#38bdf8', fontWeight: 600 }}>
+                {selectedRegionName || 'Pelagic Basin'}
               </span>
             </div>
 
-            <div style={{ display: 'flex', gap: '4px', background: 'rgba(5, 11, 20, 0.5)', padding: '3px', borderRadius: '8px' }}>
+            <div style={{ display: 'flex', gap: '4px', background: 'rgba(5, 11, 20, 0.6)', padding: '3px', borderRadius: '8px' }}>
               <button
                 onClick={() => setActiveTab('forecast')}
                 style={{
                   flex: 1,
-                  padding: '6px 4px',
+                  padding: '6px 3px',
                   borderRadius: '6px',
-                  background: activeTab === 'forecast' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                  background: activeTab === 'forecast' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
                   border: 'none',
                   color: activeTab === 'forecast' ? '#ffffff' : 'var(--text-muted)',
                   fontSize: '11px',
@@ -122,15 +128,15 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                   cursor: 'pointer'
                 }}
               >
-                SST ML Forecast
+                ML Forecast
               </button>
               <button
                 onClick={() => setActiveTab('ice')}
                 style={{
                   flex: 1,
-                  padding: '6px 4px',
+                  padding: '6px 3px',
                   borderRadius: '6px',
-                  background: activeTab === 'ice' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                  background: activeTab === 'ice' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
                   border: 'none',
                   color: activeTab === 'ice' ? '#ffffff' : 'var(--text-muted)',
                   fontSize: '11px',
@@ -138,15 +144,15 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                   cursor: 'pointer'
                 }}
               >
-                Polar Sea-Ice
+                Sea-Ice
               </button>
               <button
                 onClick={() => setActiveTab('stress')}
                 style={{
                   flex: 1,
-                  padding: '6px 4px',
+                  padding: '6px 3px',
                   borderRadius: '6px',
-                  background: activeTab === 'stress' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                  background: activeTab === 'stress' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
                   border: 'none',
                   color: activeTab === 'stress' ? '#ffffff' : 'var(--text-muted)',
                   fontSize: '11px',
@@ -154,7 +160,23 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                   cursor: 'pointer'
                 }}
               >
-                Ecosystem Risk
+                Ecosystem
+              </button>
+              <button
+                onClick={() => setActiveTab('telemetry')}
+                style={{
+                  flex: 1,
+                  padding: '6px 3px',
+                  borderRadius: '6px',
+                  background: activeTab === 'telemetry' ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
+                  border: 'none',
+                  color: activeTab === 'telemetry' ? '#ffffff' : 'var(--text-muted)',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Telemetry
               </button>
             </div>
           </div>
@@ -169,7 +191,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                 <span style={{ fontSize: '10px', color: '#94a3b8' }}>XGBoost v1 vs Persistence</span>
               </div>
 
-              <div style={{ width: '100%', height: 190 }}>
+              <div style={{ width: '100%', height: 180 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={forecastChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -196,7 +218,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                 <div>• 14-Day Skill Gain: <strong style={{ color: '#34d399' }}>+11.62%</strong> over persistence</div>
                 <div>• 30-Day Skill Gain: <strong style={{ color: '#34d399' }}>+20.08%</strong> over persistence</div>
                 <div style={{ color: 'var(--text-dim)', marginTop: '4px' }}>
-                  Atmospheric cooling is predicted to decay current marine heatwave anomaly from +2.9°C to +1.85°C by Day 30.
+                  Autoregressive decay indicates high persistence in first 7 days followed by thermal mixing.
                 </div>
               </div>
             </div>
@@ -207,17 +229,55 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, color: '#bae6fd' }}>
-                  Arctic Sea Ice Extent (Million km²)
+                  {currentIceBasin === 'arctic' ? 'Arctic' : 'Antarctic'} Sea-Ice Extent (Million km²)
                 </span>
-                <span style={{ fontSize: '10px', color: '#f87171' }}>-31.55% vs Baseline</span>
+                <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 600 }}>
+                  {seaIceData?.anomaly_percent.toFixed(1)}% vs Baseline
+                </span>
               </div>
 
-              <div style={{ width: '100%', height: 190 }}>
+              {/* Polar Basin Toggle Buttons */}
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <button
+                  onClick={() => onSwitchIceBasin('arctic')}
+                  style={{
+                    flex: 1,
+                    padding: '4px 8px',
+                    borderRadius: 4,
+                    background: currentIceBasin === 'arctic' ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255,255,255,0.05)',
+                    border: currentIceBasin === 'arctic' ? '1px solid #38bdf8' : '1px solid transparent',
+                    color: currentIceBasin === 'arctic' ? '#ffffff' : '#94a3b8',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Arctic Basin
+                </button>
+                <button
+                  onClick={() => onSwitchIceBasin('antarctic')}
+                  style={{
+                    flex: 1,
+                    padding: '4px 8px',
+                    borderRadius: 4,
+                    background: currentIceBasin === 'antarctic' ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255,255,255,0.05)',
+                    border: currentIceBasin === 'antarctic' ? '1px solid #38bdf8' : '1px solid transparent',
+                    color: currentIceBasin === 'antarctic' ? '#ffffff' : '#94a3b8',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Antarctic / Southern Basin
+                </button>
+              </div>
+
+              <div style={{ width: '100%', height: 170 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={seaIceChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                     <XAxis dataKey="month" stroke="#64748b" fontSize={10} />
-                    <YAxis stroke="#64748b" fontSize={10} domain={[3, 15]} />
+                    <YAxis stroke="#64748b" fontSize={10} />
                     <Tooltip contentStyle={{ background: '#0a1626', border: '1px solid #38bdf8', borderRadius: 8, fontSize: 11 }} />
                     <Line type="monotone" dataKey="baseline" stroke="#94a3b8" strokeDasharray="4 4" strokeWidth={1.5} name="1991-2020 Baseline" />
                     <Line type="monotone" dataKey="extent" stroke="#06b6d4" strokeWidth={2.5} dot={{ r: 3 }} name="Current / Projected Extent" />
@@ -227,9 +287,9 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
 
               <div className="glass-card" style={{ padding: '10px', fontSize: '11px', lineHeight: 1.5, color: '#cbd5e1' }}>
                 <div style={{ fontWeight: 600, color: '#38bdf8', marginBottom: '2px' }}>
-                  NSIDC Sea Ice Deficit Advisory:
+                  NSIDC Polar Climatology Baseline:
                 </div>
-                <div>Current extent is 4.23 million km² vs 6.18 million km² climatology. Multi-year pack retreat in Beaufort and Chukchi Seas.</div>
+                <div>{seaIceData?.trend_description}</div>
               </div>
             </div>
           )}
@@ -238,14 +298,14 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
           {activeTab === 'stress' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <span style={{ fontSize: '12px', fontWeight: 600, color: '#bae6fd' }}>
-                Ocean Ecosystem Stress Summary
+                Ecosystem Health & Multi-Hazard Vulnerability
               </span>
 
               {/* Stress metric meters */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                    <span>Marine Heatwave & Bleaching</span>
+                    <span>Marine Heatwave Bleaching (DHW = 8.4)</span>
                     <strong style={{ color: '#ef4444' }}>88.5 / 100</strong>
                   </div>
                   <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 3 }}>
@@ -265,7 +325,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
 
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                    <span>Cyclone Marine Hazard Index</span>
+                    <span>Cyclone Sea-State Intensification</span>
                     <strong style={{ color: '#38bdf8' }}>82.0 / 100</strong>
                   </div>
                   <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 3 }}>
@@ -275,7 +335,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
 
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                    <span>Ocean Acidification Stress</span>
+                    <span>Ocean Acidification (pH &lt; 7.95)</span>
                     <strong style={{ color: '#10b981' }}>64.0 / 100</strong>
                   </div>
                   <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 3 }}>
@@ -286,16 +346,76 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
             </div>
           )}
 
+          {/* TAB 4: Clicked Ocean Coordinate Telemetry */}
+          {activeTab === 'telemetry' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <MapPin size={15} color="var(--accent-cyan)" />
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#bae6fd' }}>
+                  Marine Coordinate Telemetry
+                </span>
+              </div>
+
+              {inspectedCoordinateData ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div className="glass-card" style={{ padding: '10px' }}>
+                    <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginBottom: 2 }}>Location:</div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
+                      {inspectedCoordinateData.ocean_basin}
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--accent-cyan)' }}>
+                      Lat: {inspectedCoordinateData.latitude.toFixed(2)}°, Lon: {inspectedCoordinateData.longitude.toFixed(2)}°
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div className="glass-card" style={{ padding: '8px' }}>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>Latest SST</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#38bdf8' }}>
+                        {inspectedCoordinateData.data_points.length > 0
+                          ? `${inspectedCoordinateData.data_points[inspectedCoordinateData.data_points.length - 1].value.toFixed(1)}°C`
+                          : '31.2°C'}
+                      </div>
+                    </div>
+                    <div className="glass-card" style={{ padding: '8px' }}>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>Dissolved O₂</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#10b981' }}>
+                        6.1 mg/L
+                      </div>
+                    </div>
+                    <div className="glass-card" style={{ padding: '8px' }}>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>Salinity</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#fbbf24' }}>
+                        35.4 PSU
+                      </div>
+                    </div>
+                    <div className="glass-card" style={{ padding: '8px' }}>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>Surface pH</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#c084fc' }}>
+                        7.98 pH
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="glass-card" style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '12px' }}>
+                  <Compass size={24} color="#38bdf8" style={{ margin: '0 auto 8px' }} />
+                  <div>Click anywhere on the ocean map to inspect real-time marine telemetry and historical trends.</div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Top-10 Highest-Risk Marine Regions List */}
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '12px' }}>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '10px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: '#f8fafc' }}>
+              <span style={{ fontSize: '12px', fontWeight: 700, color: '#f8fafc' }}>
                 Top High-Risk Marine Ecoregions
               </span>
               <ShieldAlert size={14} color="#f97316" />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: 180, overflowY: 'auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: 160, overflowY: 'auto' }}>
               {ecosystemSummary?.top_stressed_marine_ecoregions.map((reg, idx) => (
                 <div
                   key={idx}
